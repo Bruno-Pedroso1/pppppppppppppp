@@ -77,8 +77,13 @@
               @keyup.enter="register"
             >
           </v-text-field>
-          <v-text-field
+        </v-col>
+      </v-row>
+      <v-col>
+        <v-autocomplete
               v-model="user.role"
+              block
+              :items="rolea"
               outlined
               type="role"
               label="role"
@@ -88,10 +93,7 @@
               :rules="[rule.password]"
               @keyup.enter="register"
             >
-          </v-text-field>
-        </v-col>
-      </v-row>
-      <v-col>
+          </v-autocomplete>
         <v-text-field
           v-model="user.password"
           outlined
@@ -139,6 +141,7 @@ export default {
   data(){
     return{
       valid: false,
+      rolea: ['admin','customer'],
       show: false,
       show2:false,
       user:{

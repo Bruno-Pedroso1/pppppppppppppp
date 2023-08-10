@@ -96,6 +96,16 @@ export default {
           title: 'Cidades',
           to: '/admin/cities',
         },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Empresas',
+          to: '/admin/company',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Integrações',
+          to: '/admin/integration',
+        },
       ],
       miniVariant: false,
       right: true,

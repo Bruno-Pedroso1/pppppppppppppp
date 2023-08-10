@@ -76,6 +76,7 @@
             <v-col>
               <v-text-field
                 v-model="taxIdentificationNumber"
+                v-mask="['###.###.###-##', '##.###.###/####-##']"
                 outlined
                 color="green"
                 placeholder="###.###.###-##"
@@ -84,6 +85,7 @@
               </v-text-field>
               <v-text-field
               v-model="phone"
+              v-mask="['(##) ####-####', '(##) #####-####']"
                 outlined
                 color="green"
                 placeholder="(##)#####-####"

@@ -90,14 +90,17 @@
                 label="Token API"
               >
               </v-text-field>
-              <v-text-field
-                v-model="idBranch"
+              <v-autocomplete
+                v-model="selectedBranch"
+                :items="branches"
+                item-value="id"
+                item-text="tradingName"
                 outlined
                 color="green"
                 placeholder="ID da Filial"
                 label="ID da Filial"
               >
-              </v-text-field>
+              </v-autocomplete>
             </v-col>
           </v-row>
         </v-card-title>
@@ -123,12 +126,13 @@ export default {
   name: 'Index',
   data () {
     return {
+      branches: [],
+      selectedBranch: null,
       search: null,
       items: [],
       dialog: false,
       id: null,
       type: null,
-      idBranch: null,
       tokenApi: null,
       headers: [
         {
@@ -158,6 +162,7 @@ export default {
   },
   async created() {
     await this.getAllIntegration();
+    await this.getAllBranches();
   },
 
   methods: {
@@ -165,14 +170,14 @@ export default {
     clear() {
       this.type = null;
       this.id = null;
-      this.idBranch = null;
+      this.selectedBranch = null;
       this.tokenApi = null;
     },
 
     update(item) {
       this.type = item.type;
       this.id = item.id;
-      this.idBranch = item.idBranch;
+      this.selectedBranch = item.idBranch;
       this.dialog = true;
       this.tokenApi = item.tokenApi;
     },
@@ -181,7 +186,7 @@ export default {
       try {
         const request = {
           type: this.type,
-          idBranch: this.idBranch,
+          idBranch: this.selectedBranch,
           tokenApi: this.tokenApi
         }
         if (this.id) {
@@ -192,7 +197,7 @@ export default {
           this.$toast.success('Integração Cadastrada')
         }
         this.type = null;
-        this.idBranch = null;
+        this.selectedBranch = null;
         this.tokenApi = null;
         this.id = null;
         this.dialog = false;
@@ -206,6 +211,14 @@ export default {
       try {
         const response = await this.$api.get('/api/integrations');
         this.items = response;
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
+    },
+    async getAllBranches() {
+      try {
+        const response = await this.$api.get('/api/branches');
+        this.branches = response;
       } catch (error) {
         this.$toast.error(error.message)
       }

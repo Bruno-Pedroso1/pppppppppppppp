@@ -5,7 +5,7 @@
     <v-row>
       <v-col>
         <h1 class="d-flex align-center flex-column">
-          Cadastro de Estados
+          Cadastro de Serviços
         </h1>
         <v-row class="d-flex align-center flex column">
         <v-btn
@@ -68,8 +68,8 @@
                 outlined
                 disabled
                 color="green"
-                placeholder="ID do Estado"
-                label="ID do Estado"
+                placeholder="ID do Serviço"
+                label="ID do Serviço"
               >
               </v-text-field>
             </v-col>
@@ -78,19 +78,19 @@
                 v-model="name"
                 outlined
                 color="green"
-                placeholder="Nome do Estado"
-                label="Nome do Estado"
+                placeholder="Nome do Serviço"
+                label="Nome do Serviço"
               >
               </v-text-field>
               <v-autocomplete
-                v-model="selectedCountry"
-                :items="countries"
-                item-text="name"
+                v-model="selectedBranch"
+                :items="branches"
+                item-text="tradingName"
                 item-value="id"
                 outlined
                 color="green"
-                placeholder="ID do País"
-                label="ID do País"
+                placeholder="ID da Filial"
+                label="ID da Filial"
               >
               </v-autocomplete>
             </v-col>
@@ -118,13 +118,13 @@ export default {
   name: 'Index',
   data () {
     return {
-      selectedCountry: null,
-      countries: [],
       search: null,
       items: [],
       dialog: false,
       id: null,
       name: null,
+      selectedBranch: null,
+      branches: [],
       headers: [
         {
           text: 'ID',
@@ -137,8 +137,8 @@ export default {
           align: 'center'
         },
         {
-          text: 'ID do País',
-          value: 'idCountry',
+          text: 'ID da Filial',
+          value: 'idBranch',
           align: 'center'
         },
         { text: "", value: "actions", filterable: false},
@@ -146,8 +146,8 @@ export default {
     }
   },
   async created() {
-    await this.getAllStates();
-    await this.getAllCountries()
+    await this.getAllServices();
+    await this.getAllBranches();
   },
 
   methods: {
@@ -155,13 +155,13 @@ export default {
     clear() {
       this.name = null;
       this.id = null;
-      this.selectedCountry = null
+      this.selectedBranch = null
     },
 
     update(item) {
       this.name = item.name;
       this.id = item.id;
-      this.selectedCountry = item.idCountry
+      this.selectedBranch = item.idBranch
       this.dialog = true;
     },
 
@@ -169,49 +169,49 @@ export default {
       try {
         const request = {
           name: this.name,
-          idCountry: this.selectedCountry
+          idBranch: this.selectedBranch
         }
         if (this.id) {
-          await this.$api.patch(`/api/states/${this.id}`, request);
-          this.$toast.success('Estado Editado')
+          await this.$api.patch(`/api/services/${this.id}`, request);
+          this.$toast.success('Serviço Editado')
         }else {
-          await this.$api.post(`/api/states`, request);
-          this.$toast.success('Estado Cadastrado')
+          await this.$api.post(`/api/services`, request);
+          this.$toast.success('Serviço Cadastrado')
         }
         this.name = null;
-        this.selectedCountry = null;
+        this.selectedBranch = null;
         this.id = null;
         this.dialog = false;
-        await this.getAllStates();
-        await this.getAllCountry()
+        await this.getAllServices();
       } catch (error) {
+        this.$toast.error('Erro')
       }
     },
 
-    async getAllStates() {
+    async getAllServices() {
       try {
-        const response = await this.$api.get('/api/states');
+        const response = await this.$api.get('/api/services');
         this.items = response;
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
 
-    async getAllCountries() {
+    async getAllBranches() {
       try {
-        const teste = await this.$api.get('/api/countries');
-        this.countries = teste;
+        const response = await this.$api.get('/api/branches');
+        this.branches = response;
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
     async destroy(item) {
       try {
-      await this.$api.delete(`/api/states/${item.id}`);
-      await this.getAllStates();
-      this.$toast.success('Estado Removido')
+      await this.$api.delete(`/api/services/${item.id}`);
+      await this.getAllServices();
+      this.$toast.success('Serviço Removido')
     }catch (error){
-      this.$toast.error('Erro ao remover Estado')
+      this.$toast.error('Erro ao remover Serviço')
     }
   },
  }

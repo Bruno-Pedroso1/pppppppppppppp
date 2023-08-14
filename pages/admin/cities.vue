@@ -82,14 +82,17 @@
                 label="Nome da Cidade"
               >
               </v-text-field>
-              <v-text-field
-                v-model="idState"
+              <v-autocomplete
+              v-model="selectedState"
+              :items="state"
+                item-text="name"
+                item-value="id"
                 outlined
                 color="green"
                 placeholder="ID do Estado"
                 label="ID do Estado"
               >
-              </v-text-field>
+              </v-autocomplete>
             </v-col>
           </v-row>
         </v-card-title>
@@ -116,11 +119,12 @@ export default {
   data () {
     return {
       search: null,
+      state: [],
       items: [],
       dialog: false,
       id: null,
       name: null,
-      idState: null,
+      selectedState: null,
       headers: [
         {
           text: 'ID',
@@ -143,6 +147,7 @@ export default {
   },
   async created() {
     await this.getAllCities();
+    await this.getAllStates();
   },
 
   methods: {
@@ -150,13 +155,13 @@ export default {
     clear() {
       this.name = null;
       this.id = null;
-      this.idState = null
+      this.selectedState = null
     },
 
     update(item) {
       this.name = item.name;
       this.id = item.id;
-      this.idState = item.idState
+      this.selectedState = item.idState
       this.dialog = true;
     },
 
@@ -164,7 +169,7 @@ export default {
       try {
         const request = {
           name: this.name,
-          idState: this.idState
+          idState: this.selectedState
         }
         if (this.id) {
           await this.$api.patch(`/api/cities/${this.id}`, request);
@@ -174,19 +179,30 @@ export default {
           this.$toast.success('Cidade Cadastrada')
         }
         this.name = null;
-        this.idState = null;
+        this.selectedState = null;
         this.id = null;
         this.dialog = false;
         await this.getAllCities();
+        await this.getAllStates();
       } catch (error) {
         this.$toast.error('Erro')
       }
     },
 
+
     async getAllCities() {
       try {
         const response = await this.$api.get('/api/cities');
         this.items = response;
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
+    },
+
+    async getAllStates() {
+      try {
+        const teste = await this.$api.get('/api/states');
+        this.state = teste;
       } catch (error) {
         this.$toast.error(error.message)
       }

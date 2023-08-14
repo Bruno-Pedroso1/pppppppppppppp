@@ -116,6 +116,16 @@ export default {
           title: 'Endereços',
           to: '/admin/address',
         },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Serviços',
+          to: '/admin/services',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Métodos de Pagamento',
+          to: '/admin/paymentMethods',
+        },
       ],
       miniVariant: false,
       right: true,

@@ -5,7 +5,7 @@
     <v-row>
       <v-col>
         <h1 class="d-flex align-center flex-column">
-          Cadastro de Estados
+          Cadastro de Métodos de Pagamento
         </h1>
         <v-row class="d-flex align-center flex column">
         <v-btn
@@ -68,29 +68,48 @@
                 outlined
                 disabled
                 color="green"
-                placeholder="ID do Estado"
-                label="ID do Estado"
+                placeholder="ID do Método de Pagamento"
+                label="ID do Método de Pagamento"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="name"
+                v-model="type"
                 outlined
                 color="green"
-                placeholder="Nome do Estado"
-                label="Nome do Estado"
+                placeholder="Tipo"
+                label="Tipo"
+              >
+              </v-text-field>
+              <v-text-field
+                v-model="description"
+                outlined
+                color="green"
+                placeholder="Descrição"
+                label="Descrição"
               >
               </v-text-field>
               <v-autocomplete
-                v-model="selectedCountry"
-                :items="countries"
-                item-text="name"
+                v-model="selectedBranch"
+                :items="branches"
+                item-text="tradingName"
                 item-value="id"
                 outlined
                 color="green"
-                placeholder="ID do País"
-                label="ID do País"
+                placeholder="ID da Filial"
+                label="ID da Filial"
+              >
+              </v-autocomplete>
+              <v-autocomplete
+                v-model="selectedIntegration"
+                :items="integ"
+                item-text="type"
+                item-value="id"
+                outlined
+                color="green"
+                placeholder="ID da Integração"
+                label="ID da Integração"
               >
               </v-autocomplete>
             </v-col>
@@ -118,13 +137,16 @@ export default {
   name: 'Index',
   data () {
     return {
-      selectedCountry: null,
-      countries: [],
       search: null,
       items: [],
       dialog: false,
       id: null,
-      name: null,
+      type: null,
+      description: null,
+      selectedBranch: null,
+      selectedIntegration: null,
+      branches: [],
+      integ: [],
       headers: [
         {
           text: 'ID',
@@ -132,13 +154,23 @@ export default {
           align: 'center'
         },
         {
-          text: 'Nome',
-          value: 'name',
+          text: 'Tipo',
+          value: 'type',
           align: 'center'
         },
         {
-          text: 'ID do País',
-          value: 'idCountry',
+          text: 'Descrição',
+          value: 'description',
+          align: 'center'
+        },
+        {
+          text: 'ID da Filial',
+          value: 'idBranch',
+          align: 'center'
+        },
+        {
+          text: 'ID da Integração',
+          value: 'idIntegration',
           align: 'center'
         },
         { text: "", value: "actions", filterable: false},
@@ -146,72 +178,88 @@ export default {
     }
   },
   async created() {
-    await this.getAllStates();
-    await this.getAllCountries()
+    await this.getAllPaymentMethods();
+    await this.getAllIntegrarion();
+    await this.getAllBranches();
   },
 
   methods: {
 
     clear() {
-      this.name = null;
+      this.type = null;
+      this.description = null;
       this.id = null;
-      this.selectedCountry = null
+      this.selectedBranch = null;
+      this.selectedIntegration = null;
     },
 
     update(item) {
-      this.name = item.name;
+      this.type = item.name;
       this.id = item.id;
-      this.selectedCountry = item.idCountry
+      this.selectedBranch = item.idBranch;
+      this.selectedIntegration = item.idIntegration;
+      this.description = item.description;
       this.dialog = true;
     },
 
     async persist() {
       try {
         const request = {
-          name: this.name,
-          idCountry: this.selectedCountry
+          type: this.type,
+          description: this.description,
+          idBranch: this.selectedBranch,
+          idIntegration: this.selectedIntegration
         }
         if (this.id) {
-          await this.$api.patch(`/api/states/${this.id}`, request);
-          this.$toast.success('Estado Editado')
+          await this.$api.patch(`/api/payment-methods/${this.id}`, request);
+          this.$toast.success('Método de Pagamento Editado')
         }else {
-          await this.$api.post(`/api/states`, request);
-          this.$toast.success('Estado Cadastrado')
+          await this.$api.post(`/api/payment-methods`, request);
+          this.$toast.success('Método de Pagamento Cadastrado')
         }
-        this.name = null;
-        this.selectedCountry = null;
+        this.type = null;
+        this.selectedBranch = null;
+        this.description = null;
+        this.selectedIntegration = null;
         this.id = null;
         this.dialog = false;
-        await this.getAllStates();
-        await this.getAllCountry()
+        await this.getAllPaymentMethods();
       } catch (error) {
+        this.$toast.error('Erro')
       }
     },
 
-    async getAllStates() {
+    async getAllPaymentMethods() {
       try {
-        const response = await this.$api.get('/api/states');
+        const response = await this.$api.get('/api/payment-methods');
         this.items = response;
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
-
-    async getAllCountries() {
+    async getAllBranches() {
       try {
-        const teste = await this.$api.get('/api/countries');
-        this.countries = teste;
+        const response = await this.$api.get('/api/branches');
+        this.branches = response;
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
+    },
+    async getAllIntegrarion() {
+      try {
+        const response = await this.$api.get('/api/integrations');
+        this.integ = response;
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
     async destroy(item) {
       try {
-      await this.$api.delete(`/api/states/${item.id}`);
-      await this.getAllStates();
-      this.$toast.success('Estado Removido')
+      await this.$api.delete(`/api/payment-methods/${item.id}`);
+      await this.getAllPaymentMethods();
+      this.$toast.success('Método de Pagamento Removido')
     }catch (error){
-      this.$toast.error('Erro ao remover Estado')
+      this.$toast.error('Erro ao remover Método de Pagamento')
     }
   },
  }

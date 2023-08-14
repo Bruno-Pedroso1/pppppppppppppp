@@ -105,14 +105,17 @@
                 label="Nome fantasia da Filial"
               >
               </v-text-field>
-              <v-text-field
-                v-model="idCompany"
+              <v-autocomplete
+                v-model="selectedCompany"
+                :items="companies"
+                item-text="businessName"
+                item-value="id"
                 outlined
                 color="green"
                 placeholder="ID da Empresa"
                 label="ID da Empresa"
               >
-              </v-text-field>
+              </v-autocomplete>
               <v-text-field
                 v-model="idAddress"
                 outlined
@@ -147,6 +150,7 @@ export default {
   data () {
     return {
       search: null,
+      companies: [],
       items: [],
       dialog: false,
       id: null,
@@ -154,7 +158,7 @@ export default {
       email: null,
       tradingName: null,
       businessName: null,
-      idCompany: null,
+      selectedCompany: null,
       idAddress: null,
       headers: [
         {
@@ -198,6 +202,7 @@ export default {
   },
   async created() {
     await this.getAllBranch();
+    await this.getAllCompanies();
   },
 
   methods: {
@@ -208,7 +213,7 @@ export default {
       this.email = null;
       this.tradingName = null;
       this.businessName = null;
-      this.idCompany = null;
+      this.selectedCompany = null;
       this.idAddress = null;
     },
 
@@ -217,7 +222,7 @@ export default {
       this.companyDocument = item.companyDocument;
       this.email = item.email;
       this.tradingName = item.tradingName;
-      this.idCompany = item.idCompany;
+      this.selectedCompany = item.idCompany;
       this.idAddress = item.idAddress;
       this.id = item.id;
       this.dialog = true;
@@ -230,7 +235,7 @@ export default {
           email: this.email,
           tradingName: this.tradingName,
           businessName: this.businessName,
-          idCompany: this.idCompany,
+          idCompany: this.selectedCompany,
           idAddress: this.idAddress,
         }
         if (this.id) {
@@ -244,20 +249,29 @@ export default {
         this.email = null;
         this.tradingName = null;
         this.businessName = null;
-        this.idCompany = null;
+        this.selectedCompany = null;
         this.idAddress = null;
         this.id = null;
         this.dialog = false;
         await this.getAllBranch();
+        await this.getAllCompanies();
       } catch (error) {
         this.$toast.error('Erro')
       }
     },
-
     async getAllBranch() {
       try {
         const response = await this.$api.get('/api/branches');
         this.items = response;
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
+    },
+
+    async getAllCompanies() {
+      try {
+        const comp = await this.$api.get('/api/companies');
+        this.companies = comp;
       } catch (error) {
         this.$toast.error(error.message)
       }

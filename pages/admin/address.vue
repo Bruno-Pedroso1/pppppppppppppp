@@ -114,14 +114,17 @@
                 label="Complemento"
               >
               </v-text-field>
-              <v-text-field
-                v-model="idCity"
+              <v-autocomplete
+                v-model="selectedCity"
+                :items="cities"
+                item-text="name"
+                item-value="id"
                 outlined
                 color="green"
                 placeholder="ID da Cidade"
                 label="ID da Cidade"
               >
-              </v-text-field>
+              </v-autocomplete>
             </v-col>
           </v-row>
         </v-card-title>
@@ -147,12 +150,13 @@ export default {
   name: 'Index',
   data () {
     return {
+      cities: [],
+      selectedCity: null,
       search: null,
       items: [],
       dialog: false,
       id: null,
       zipCode: null,
-      idCity: null,
       complement: null,
       number: null,
       street: null,
@@ -199,13 +203,14 @@ export default {
   },
   async created() {
     await this.getAllAddresses();
+    await this.getAllCities();
   },
 
   methods: {
 
     clear() {
       this.zipCode = null;
-      this.idCity = null;
+      this.selectedCity = null;
       this.complement = null;
       this.number = null;
       this.street = null;
@@ -215,7 +220,7 @@ export default {
 
     update(item) {
       this.zipCode = item.zipCode;
-      this.idCity = item.idCity;
+      this.selectedCity = item.idCity;
       this.complement = item.complement;
       this.number = item.number;
       this.street = item.street;
@@ -228,7 +233,7 @@ export default {
       try {
         const request = {
           zipCode: this.zipCode,
-          idCity: this.idCity,
+          idCity: this.selectedCity,
           complement: this.complement,
           number: this.number,
           street: this.street,
@@ -242,15 +247,15 @@ export default {
           this.$toast.success('Endereço Cadastrado')
         }
         this.zipCode = null;
-        this.idCity = null;
+        this.selectedCity = null;
         this.complement = null;
         this.number = null;
         this.street = null;
         this.district = null;
         this.id = null;
-        this.id = null;
         this.dialog = false;
         await this.getAllAddresses();
+        await this.getAllCities();
       } catch (error) {
         this.$toast.error('Erro')
       }
@@ -260,6 +265,15 @@ export default {
       try {
         const response = await this.$api.get('/api/addresses');
         this.items = response;
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
+    },
+
+    async getAllCities() {
+      try {
+        const response = await this.$api.get('/api/cities');
+        this.cities = response;
       } catch (error) {
         this.$toast.error(error.message)
       }

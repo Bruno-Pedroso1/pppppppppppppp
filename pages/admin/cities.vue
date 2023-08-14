@@ -5,7 +5,7 @@
     <v-row>
       <v-col>
         <h1 class="d-flex align-center flex-column">
-          Cadastro de Países
+          Cadastro de Cidades
         </h1>
         <v-row class="d-flex align-center flex column">
         <v-btn

@@ -182,7 +182,7 @@ export default {
         const request = {
           type: this.type,
           idBranch: this.idBranch,
-          tokeApi: this.tokenApi
+          tokenApi: this.tokenApi
         }
         if (this.id) {
           await this.$api.patch(`/api/integrations/${this.id}`, request);

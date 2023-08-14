@@ -129,7 +129,7 @@ export default {
           align: 'center'
         },
         {
-          text: 'Nome da Compania',
+          text: 'Nome da Empresa',
           value: 'businessName',
           field: 'business_name',
           align: 'center'

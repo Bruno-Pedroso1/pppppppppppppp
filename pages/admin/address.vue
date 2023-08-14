@@ -5,7 +5,7 @@
     <v-row>
       <v-col>
         <h1 class="d-flex align-center flex-column">
-          Cadastro de Estados
+          Cadastro de Endereços
         </h1>
         <v-row class="d-flex align-center flex column">
         <v-btn
@@ -68,26 +68,58 @@
                 outlined
                 disabled
                 color="green"
-                placeholder="ID do Estado"
-                label="ID do Estado"
+                placeholder="ID do Endereço"
+                label="ID do Endereço"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="name"
+                v-model="zipCode"
                 outlined
                 color="green"
-                placeholder="Nome do Estado"
-                label="Nome do Estado"
+                placeholder="CEP"
+                label="CEP"
               >
               </v-text-field>
               <v-text-field
-                v-model="idCountry"
+                v-model="district"
                 outlined
                 color="green"
-                placeholder="ID do País"
-                label="ID do País"
+                placeholder="Bairro"
+                label="Bairro"
+              >
+              </v-text-field>
+              <v-text-field
+                v-model="street"
+                outlined
+                color="green"
+                placeholder="Rua"
+                label="Rua"
+              >
+            </v-text-field>
+            <v-text-field
+                v-model="number"
+                outlined
+                color="green"
+                placeholder="Número"
+                label="Número"
+              >
+              </v-text-field>
+              <v-text-field
+                v-model="complement"
+                outlined
+                color="green"
+                placeholder="Complemento"
+                label="Complemento"
+              >
+              </v-text-field>
+              <v-text-field
+                v-model="idCity"
+                outlined
+                color="green"
+                placeholder="ID da Cidade"
+                label="ID da Cidade"
               >
               </v-text-field>
             </v-col>
@@ -119,8 +151,12 @@ export default {
       items: [],
       dialog: false,
       id: null,
-      name: null,
-      idCountry: null,
+      zipCode: null,
+      idCity: null,
+      complement: null,
+      number: null,
+      street: null,
+      district: null,
       headers: [
         {
           text: 'ID',
@@ -128,13 +164,33 @@ export default {
           align: 'center'
         },
         {
-          text: 'Nome',
-          value: 'name',
+          text: 'CEP',
+          value: 'zipCode',
           align: 'center'
         },
         {
-          text: 'ID do País',
-          value: 'idCountry',
+          text: 'ID da Cidade',
+          value: 'idCity',
+          align: 'center'
+        },
+        {
+          text: 'Complemento',
+          value: 'complement',
+          align: 'center'
+        },
+        {
+          text: 'Número',
+          value: 'number',
+          align: 'center'
+        },
+        {
+          text: 'Rua',
+          value: 'street',
+          align: 'center'
+        },
+        {
+          text: 'Bairro',
+          value: 'district',
           align: 'center'
         },
         { text: "", value: "actions", filterable: false},
@@ -142,50 +198,67 @@ export default {
     }
   },
   async created() {
-    await this.getAllStates();
+    await this.getAllAddresses();
   },
 
   methods: {
 
     clear() {
-      this.name = null;
+      this.zipCode = null;
+      this.idCity = null;
+      this.complement = null;
+      this.number = null;
+      this.street = null;
+      this.district = null;
       this.id = null;
-      this.idCountry = null
     },
 
     update(item) {
-      this.name = item.name;
+      this.zipCode = item.zipCode;
+      this.idCity = item.idCity;
+      this.complement = item.complement;
+      this.number = item.number;
+      this.street = item.street;
+      this.district = item.district;
       this.id = item.id;
-      this.idCountry = item.idCountry
       this.dialog = true;
     },
 
     async persist() {
       try {
         const request = {
-          name: this.name,
-          idCountry: this.idCountry
+          zipCode: this.zipCode,
+          idCity: this.idCity,
+          complement: this.complement,
+          number: this.number,
+          street: this.street,
+          district: this.district
         }
         if (this.id) {
-          await this.$api.patch(`/api/states/${this.id}`, request);
-          this.$toast.success('Estado Editado')
+          await this.$api.patch(`/api/addresses/${this.id}`, request);
+          this.$toast.success('Endereço Editado')
         }else {
-          await this.$api.post(`/api/states`, request);
-          this.$toast.success('Estado Cadastrado')
+          await this.$api.post(`/api/addresses`, request);
+          this.$toast.success('Endereço Cadastrado')
         }
-        this.name = null;
-        this.idCountry = null;
+        this.zipCode = null;
+        this.idCity = null;
+        this.complement = null;
+        this.number = null;
+        this.street = null;
+        this.district = null;
+        this.id = null;
         this.id = null;
         this.dialog = false;
-        await this.getAllStates();
+        await this.getAllAddresses();
       } catch (error) {
         this.$toast.error('Erro')
       }
     },
 
-    async getAllStates() {
+    async getAllAddresses() {
       try {
-        const response = await this.$api.get('/api/states');
+        const response = await this.$api.get('/api/addresses');
         this.items = response;
       } catch (error) {
         this.$toast.error(error.message)
@@ -193,11 +266,11 @@ export default {
     },
     async destroy(item) {
       try {
-      await this.$api.delete(`/api/states/${item.id}`);
-      await this.getAllStates();
-      this.$toast.success('Estado Removido')
+      await this.$api.delete(`/api/addresses/${item.id}`);
+      await this.getAllAddresses();
+      this.$toast.success('Endereço Removido')
     }catch (error){
-      this.$toast.error('Erro ao remover Estado')
+      this.$toast.error('Erro ao remover Endereço')
     }
   },
  }
@@ -206,4 +279,4 @@ export default {
 
 <style>
 
-</style>
+</style>  

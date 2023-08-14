@@ -8,16 +8,6 @@
           Cadastro de Usuario
         </h1>
         <v-row class="d-flex align-center flex column">
-        <v-btn
-          fab
-          small
-          color="green"
-          @click="dialog = true; clear()"
-        >
-          <v-icon>
-            mdi-plus
-          </v-icon>
-        </v-btn>
       </v-row>
       </v-col>
     </v-row>

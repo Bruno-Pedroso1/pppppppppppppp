@@ -106,6 +106,16 @@ export default {
           title: 'Integrações',
           to: '/admin/integration',
         },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Filiais',
+          to: '/admin/branch',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Endereços',
+          to: '/admin/address',
+        },
       ],
       miniVariant: false,
       right: true,

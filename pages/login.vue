@@ -1,5 +1,5 @@
 <template>
-  <v-container class="d-flex justify-center text-center">
+  <v-container class="d-flex justify-center text-center mt-15">
     <v-form 
     @submit.prevent="logna" 
     >
@@ -11,7 +11,7 @@
     </h1>
     <v-text-field
     v-model="login.email"
-    class="mt-5"
+    class="mt-10"
       label="E-mail"
       outlined
       required
@@ -67,6 +67,7 @@
 <script>
 export default {
   name: 'Login',
+  layout: 'login',
   data(){
     return{
       valid: false,

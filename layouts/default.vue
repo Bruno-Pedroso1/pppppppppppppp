@@ -126,6 +126,11 @@ export default {
           title: 'Métodos de Pagamento',
           to: '/admin/paymentMethods',
         },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Pagamentos',
+          to: '/admin/payments',
+        },
       ],
       miniVariant: false,
       right: true,
